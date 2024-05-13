@@ -193,9 +193,6 @@ export default function App() {
 
 # Documentation, tutorials, examples
 
-Visit [docs.pmnd.rs](https://docs.pmnd.rs/react-three-fiber)
-
-<a href="https://docs.pmnd.rs/react-three-fiber"><img src="/docs/preview.jpg"></a>
 
 # Fundamentals
 
