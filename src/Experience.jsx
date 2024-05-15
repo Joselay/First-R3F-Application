@@ -1,69 +1,56 @@
-import {
-  MeshReflectorMaterial,
-  Float,
-  Text,
-  Html,
-  OrbitControls,
-  PivotControls,
-  TransformControls,
-} from "@react-three/drei";
+import { OrbitControls, useHelper } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { useControls } from "leva";
+import { Perf } from "r3f-perf";
 import { useRef } from "react";
+import * as THREE from "three";
 
 export default function Experience() {
+  const directionalLight = useRef();
+  useHelper(directionalLight, THREE.DirectionalLightHelper, 1);
+
   const cubeRef = useRef();
-  const sphereRef = useRef();
+
+  useFrame((_, delta) => {
+    cubeRef.current.rotation.y += delta * 0.2;
+  });
+
+  const { position, color, visible } = useControls({
+    position: {
+      value: { x: -2, y: 0 },
+      step: 0.01,
+      joystick: "invertY",
+    },
+    color: "#ff0000",
+    visible: true,
+  });
 
   return (
     <>
+      <Perf position="top-left" />
       <OrbitControls makeDefault />
-      <directionalLight position={[1, 2, 3]} intensity={1.5} />
+
+      <directionalLight
+        ref={directionalLight}
+        position={[1, 2, 3]}
+        intensity={1.5}
+      />
       <ambientLight intensity={0.5} />
 
-      <PivotControls anchor={[0, 0, 0]} depthTest={false}>
-        <mesh ref={sphereRef} position-x={-2}>
-          <sphereGeometry />
-          <meshStandardMaterial color="orange" />
-          <Html
-            position={[1, 1, 0]}
-            wrapperClass="label"
-            center
-            distanceFactor={6}
-            occlude={[sphereRef, cubeRef]}
-          >
-            That's a sphere 👍
-          </Html>
-        </mesh>
-      </PivotControls>
+      <mesh position={[position.x, position.y, 0]} visible={visible}>
+        <sphereGeometry />
+        <meshStandardMaterial color={color} />
+      </mesh>
 
-      <TransformControls position-x={2}>
-        <mesh ref={cubeRef} scale={1.5}>
-          <boxGeometry />
-          <meshStandardMaterial color="mediumpurple" />
-        </mesh>
-      </TransformControls>
+      <mesh position-x={2} scale={1.5} ref={cubeRef}>
+        <boxGeometry />
+        <meshStandardMaterial color="mediumpurple" />
+      </mesh>
 
       <mesh position-y={-1} rotation-x={-Math.PI * 0.5} scale={10}>
         <planeGeometry />
-        {/* <meshStandardMaterial color="greenyellow" /> */}
-        <MeshReflectorMaterial
-          resolution={512}
-          blur={[1000, 1000]}
-          mixBlur={1}
-        />
+        <meshStandardMaterial color="greenyellow" />
       </mesh>
-
-      <Float speed={5} floatIntensity={2}>
-        <Text
-          font="./bangers-v20-latin-regular.woff"
-          fontSize={1}
-          color="salmon"
-          position-y={2}
-          maxWidth={2}
-          textAlign="center"
-        >
-          I LOVE R3F
-        </Text>
-      </Float>
     </>
   );
 }
