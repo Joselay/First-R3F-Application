@@ -1,4 +1,9 @@
-import { OrbitControls, useHelper } from "@react-three/drei";
+import {
+  BakeShadows,
+  OrbitControls,
+  softShadows,
+  useHelper,
+} from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useControls } from "leva";
 import { Perf } from "r3f-perf";
@@ -27,27 +32,35 @@ export default function Experience() {
 
   return (
     <>
+      <BakeShadows />
       <Perf position="top-left" />
       <OrbitControls makeDefault />
 
       <directionalLight
+        shadow-mapSize={[1024, 1024]}
+        castShadow
         ref={directionalLight}
         position={[1, 2, 3]}
         intensity={1.5}
       />
       <ambientLight intensity={0.5} />
 
-      <mesh position={[position.x, position.y, 0]} visible={visible}>
+      <mesh castShadow position={[position.x, position.y, 0]} visible={visible}>
         <sphereGeometry />
         <meshStandardMaterial color={color} />
       </mesh>
 
-      <mesh position-x={2} scale={1.5} ref={cubeRef}>
+      <mesh castShadow position-x={2} scale={1.5} ref={cubeRef}>
         <boxGeometry />
         <meshStandardMaterial color="mediumpurple" />
       </mesh>
 
-      <mesh position-y={-1} rotation-x={-Math.PI * 0.5} scale={10}>
+      <mesh
+        receiveShadow
+        position-y={-1}
+        rotation-x={-Math.PI * 0.5}
+        scale={10}
+      >
         <planeGeometry />
         <meshStandardMaterial color="greenyellow" />
       </mesh>

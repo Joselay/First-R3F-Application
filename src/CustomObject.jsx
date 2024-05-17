@@ -4,7 +4,7 @@ import { useRef, useEffect, useMemo } from "react";
 const CustomObject = () => {
   const geometryRef = useRef();
 
-  const verticesCount = 10 * 3;
+  const verticesCount = 20 * 3;
 
   const positions = useMemo(() => {
     const positions = new Float32Array(verticesCount * 3);
